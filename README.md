@@ -4,8 +4,6 @@ YouTube, YouTube Shorts, Instagram, Twitter / X ve TikTok bağlantılarından vi
 
 Sunucu tarafı **Node.js + Express**, görünümler **EJS**, veritabanı **sql.js (SQLite)**, indirme motoru **yt-dlp** ve **FFmpeg**'dir.
 
----
-
 ## İçindekiler
 
 - [Özellikler](#özellikler)
@@ -23,8 +21,6 @@ Sunucu tarafı **Node.js + Express**, görünümler **EJS**, veritabanı **sql.j
 - [Güvenlik](#güvenlik)
 - [Sorun giderme](#sorun-giderme)
 - [Lisans](#lisans)
-
----
 
 ## Özellikler
 
@@ -49,8 +45,6 @@ Sunucu tarafı **Node.js + Express**, görünümler **EJS**, veritabanı **sql.j
 - Kullanıcı adı ve şifre değiştirme
 - Yeniden boyutlandırılabilir kenar çubuğu (genişlik kaydedilir)
 
----
-
 ## Gereksinimler
 
 | Gereksinim | Not |
@@ -61,8 +55,6 @@ Sunucu tarafı **Node.js + Express**, görünümler **EJS**, veritabanı **sql.j
 | **Python (isteğe bağlı)** | Hazır yt-dlp ikili dosyası çalışmazsa yedek olarak kullanılır |
 
 Desteklenen sistemler: Windows (x64, arm64, ia32), Linux (x64, arm64, arm), macOS (x64, arm64) ve Android / Termux.
-
----
 
 ## Kurulum
 
@@ -81,8 +73,6 @@ cp .env.ornek .env        # Windows: copy .env.ornek .env
 ```bash
 npm run araclari-kur
 ```
-
----
 
 ## Yapılandırma (.env)
 
@@ -107,8 +97,6 @@ npm run araclari-kur
 
 > `.env` dosyası `.gitignore` içindedir; depoya eklemeyin.
 
----
-
 ## Çalıştırma
 
 ```bash
@@ -126,8 +114,6 @@ Admin : http://localhost:3000/admin/giris
 - Admin girişi: `http://localhost:3000/admin/giris`
 
 Her 30 dakikada bir `gecici/` klasöründeki süresi dolmuş dosyalar otomatik silinir (saklama süresi admin panelinden ayarlanır).
-
----
 
 ## Admin paneli
 
@@ -156,8 +142,6 @@ const SIDEBAR_VARSAYILAN = 220;
 ```
 
 Bu değerler hem CSS'e, hem sürükleme koduna, hem de sunucu tarafındaki sınırlamaya buradan aktarılır.
-
----
 
 ## Proje yapısı
 
@@ -194,8 +178,6 @@ Bu değerler hem CSS'e, hem sürükleme koduna, hem de sunucu tarafındaki sın�
 ├── .env.ornek                 # Örnek ortam dosyası
 └── package.json
 ```
-
----
 
 ## HTTP uç noktaları
 
@@ -240,8 +222,6 @@ Yalnızca `platform.js` içinde izin verilen alan adları kabul edilir (YouTube,
 
 `/admin/giris` ve `/admin/cikis` dışındaki tüm admin yolları oturum açmayı gerektirir.
 
----
-
 ## Veritabanı
 
 SQLite dosyası `veritabani/database.db` konumunda tutulur. [sql.js](https://github.com/sql-js/sql.js) kullanıldığı için veritabanı bellekte çalışır ve her yazma işleminden sonra dosyaya kaydedilir. Tablolar ilk çalıştırmada otomatik oluşturulur.
@@ -258,8 +238,6 @@ SQLite dosyası `veritabani/database.db` konumunda tutulur. [sql.js](https://git
 
 IP adresleri düz metin olarak saklanmaz; yalnızca hash'in ilk 16 karakteri tutulur.
 
----
-
 ## Uygulama ayarları
 
 Admin panelindeki **Uygulama Ayarları** bölümünden değiştirilir ve `ayarlar` tablosunda saklanır. Değerler sunucuda aşağıdaki aralıklara sınırlanır:
@@ -272,8 +250,6 @@ Admin panelindeki **Uygulama Ayarları** bölümünden değiştirilir ve `ayarla
 | Kenar çubuğu genişliği (`sidebar_genislik`) | 220 px | `SIDEBAR_MIN` – `SIDEBAR_MAX` |
 
 `bakim_modu` ayarı da veritabanında tutulur ancak şu an istek akışında kullanılmaz.
-
----
 
 ## Arayüz ve stiller
 
@@ -298,8 +274,6 @@ Tema renkleri `:root` / `[data-tema="aydinlik"]` ve `[data-tema="karanlik"]` alt
 
 Fontlar Google Fonts'tan yüklenir (Sora, JetBrains Mono).
 
----
-
 ## Harici araçlar (yt-dlp / FFmpeg)
 
 Uygulama açılırken `servisler/araclar.js` araçları şu sırayla arar:
@@ -317,8 +291,6 @@ Gerekli en düşük yt-dlp sürümü **2025.11.12**'dir (`--js-runtimes` desteğ
 pkg install python ffmpeg
 npm run araclari-kur
 ```
-
----
 
 ## Güvenlik
 
@@ -341,8 +313,6 @@ Yayına almadan önce kontrol listesi:
 - [ ] HTTPS kullanıyorsanız `SESSION_SECURE=true` yapın
 - [ ] Uygulama bir ters vekil (nginx vb.) arkasında çalışacak şekilde `trust proxy = 1` ile yapılandırılmıştır; doğrudan internete açıyorsanız bu ayarı gözden geçirin
 
----
-
 ## Sorun giderme
 
 | Belirti | Olası neden / çözüm |
@@ -354,8 +324,8 @@ Yayına almadan önce kontrol listesi:
 | Admin şifresi unutuldu | `veritabani/database.db` dosyasını silip uygulamayı yeniden başlatırsanız varsayılan hesap (`admin / admin123`) yeniden oluşur. Bu işlem tüm istatistik ve kayıtları da sıfırlar |
 | Değişen CSS görünmüyor | Tarayıcıda `Ctrl + F5` ile sert yenileme yapın |
 
----
+## 📄 License
+This project is released into the public domain under the [Unlicense](https://unlicense.org/); you are free to use, modify, and distribute it as you wish. See the [`LICENSE`](LICENSE) file for details.
 
-## Lisans
-
-Bu proje lisanssızdır. © 2026 Ömer Denizhan
+## 🕰️ Last Update
+Oct 09, 2026
