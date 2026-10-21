@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+
+<html lang="tr" data-tema="aydinlik">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+        <meta name="theme-color" content="#eef0f8">
+        <script src="/tema.js"></script>
+        <title>Admin Paneli · D-Tube Video İndirici</title>
+        <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="/tema.css">
+        <style>
+            :root {
+            --kenar-min-genislik: <%= sidebarMin %>px;
+            --kenar-max-genislik: <%= sidebarMax %>px;
+            --kenar-genislik: <%= sidebarGenislik %>px;
+            }
+        </style>
+    </head>
+    <body class="sayfa-admin-panel">
+        <nav class="kenar" id="kenarSidebar">
+            <div class="kenar-resizer" id="kenarResizer" title="Sidebar genişliğini ayarlamak için sürükleyin"></div>
+            <div class="kenar-logo">
+                <strong><span>D-Tube Video İndirici</span><br>Admin Paneli</strong>
+                <br>
+                <small id="hosgeldinMetni">Hoş geldiniz, <span id="aktifAdminAdi"><%= adminAdi %></span></small>
+            </div>
+            <a class="kenar-link aktif" id="sekmeDashboardLink" href="#dashboard" data-sekme="dashboard">📊 Ana Panel</a>
+            <a class="kenar-link" id="sekmeHesaplarLink" href="#hesaplar" data-sekme="hesaplar">👤 Kullanıcı Hesapları</a>
+            <a class="kenar-link cikis" href="/admin/cikis">⬡ Çıkış Yap</a>
+            <button class="tema-btn kenar-tema-btn" type="button" data-tema-btn aria-label="Karanlık moda geç"></button>
+        </nav>
+        <div class="icerik">
+            <header class="ustbar">
+                <h1 id="panelBaslik">Ana Panel</h1>
+                <button class="tema-btn" id="temaDugmesi" type="button" data-tema-btn aria-label="Karanlık moda geç"></button>
+            </header>
+            <div class="panel-sekme" id="panelSekmeDashboard">
+                <div class="kart-grid">
+                <div class="istat-kart">
+                    <div class="etiket">Toplam İndirme</div>
+                    <div class="deger vurgu">
+                        <%= toplamIndirme %>
+                    </div>
+                </div>
+                <div class="istat-kart">
+                    <div class="etiket">Tekil Ziyaretçi</div>
+                    <div class="deger">
+                        <%= toplamZiyaretci %>
+                    </div>
+                </div>
+                <div class="istat-kart">
+                    <div class="etiket">En Çok Platform</div>
+                    <div class="deger deger-kucuk">
+                        <%= platformIstatistik[0]?.platform || '-' %>
+                    </div>
+                </div>
+                <div class="istat-kart">
+                    <div class="etiket">En Çok Format</div>
+                    <div class="deger deger-kucuk">
+                        <%= formatIstatistik[0]?.format?.toUpperCase() || '-' %>
+                    </div>
+                </div>
+            </div>
+            <div class="bolum">
+                <div class="sistem-ust">
+                    <h3>Sistem Sağlık Durumu</h3>
+                    <button class="yenile-btn" id="sistemDurumuYenile" type="button">↻ Yenile</button>
+                </div>
+                <div class="sistem-grid" id="sistemDurumuGrid" aria-live="polite">
+                    <div class="sistem-durum-detay">Kontroller çalıştırılıyor...</div>
+                </div>
+                <div class="sistem-zaman" id="sistemDurumuZaman"></div>
+            </div>
+            <div class="bolum">
+                <div class="sistem-ust">
+                    <h3>Aktif İndirmeler</h3>
+                    <span class="sistem-zaman" id="aktifIndirmeZamani"></span>
+                </div>
+                <div class="aktif-indirme-listesi" id="aktifIndirmeListesi" aria-live="polite">
+                    <div class="sistem-durum-detay">Aktif işler kontrol ediliyor...</div>
+                </div>
+            </div>
+            <div class="bolum">
+                <div class="sistem-ust">
+                    <h3>Uygulama Ayarları</h3><span class="sistem-zaman">Canlı ayarlar</span>
+                </div>
+                <div class="ayarlar-grid">
+                    <div class="ayar-alani"><label for="ayarMaksVideo">Maksimum playlist videosu</label><input
+                            id="ayarMaksVideo" type="number" min="1" max="50" inputmode="numeric"></div>
+                    <div class="ayar-alani"><label for="ayarSaklama">Geçici dosya saklama süresi</label><select
+                            id="ayarSaklama">
+                            <option value="300000">5 dakika</option>
+                            <option value="1800000">30 dakika</option>
+                            <option value="3600000">1 saat</option>
+                            <option value="21600000">6 saat</option>
+                            <option value="86400000">24 saat</option>
+                        </select></div>
+                    <div class="ayar-alani"><label for="ayarKalite">Varsayılan video kalitesi</label><select
+                            id="ayarKalite">
+                            <option value="360p">360p</option>
+                            <option value="480p">480p</option>
+                            <option value="720p">720p</option>
+                            <option value="1080p">1080p</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="ayar-kaydet-satir"><button class="kaydet-btn"
+                        id="ayarKaydetBtn" type="button">Ayarları kaydet</button>
+                    <div class="mesaj" id="ayarMesaj"></div>
+                </div>
+                <div class="ayar-bilgi">Playlist limiti ve saklama süresi yeni işlemlerde uygulanır. Saklama süresi 5 dakika ile 24 saat arasındadır.</div>
+            </div>
+            <div class="bolum">
+                <div class="istatistik-ust">
+                    <h3>Kullanım Analizi</h3><select class="aralik-sec" id="kullanimAralik" aria-label="Kullanım analiz dönemi">
+                        <option value="7">Son 7 gün</option>
+                        <option value="30" selected>Son 30 gün</option>
+                        <option value="90">Son 90 gün</option>
+                    </select>
+                </div>
+                <div class="kullanim-ozet" id="kullanimOzet">
+                    <div class="sistem-durum-detay">Analiz yükleniyor...</div>
+                </div>
+                <div class="grafik-baslik"><span>Yoğunluk saatleri</span><span id="kullanimYogunSaat"></span></div>
+                <div class="saat-grafik" id="saatGrafik" aria-label="Saatlik kullanım grafiği"></div>
+            </div>
+            <div class="bolum">
+                <div class="hata-ust">
+                    <h3>Admin Güvenlik Olayları</h3>
+                    <button class="hata-toggle" id="guvenlikToggle" type="button" aria-expanded="false" aria-controls="guvenlikIcerigi">Göster</button>
+                </div>
+                <div id="guvenlikIcerigi" hidden>
+                    <div class="guvenlik-olaylari">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Kullanıcı</th>
+                                    <th>Olay</th>
+                                    <th>Durum</th>
+                                    <th>Zaman</th>
+                                </tr>
+                            </thead>
+                            <tbody id="guvenlikOlayListesi">
+                                <tr>
+                                    <td colspan="4" class="renk-yazi2">Olaylar yükleniyor...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="bolum">
+                <div class="istatistik-ust">
+                    <h3>Dönem İstatistikleri</h3>
+                    <select class="aralik-sec" id="istatistikAralik" aria-label="İstatistik dönemi">
+                        <option value="7">Son 7 gün</option>
+                        <option value="30">Son 30 gün</option>
+                        <option value="90">Son 90 gün</option>
+                    </select>
+                </div>
+                <div class="donem-kartlari" id="donemKartlari" aria-live="polite">
+                    <div class="sistem-durum-detay">İstatistikler yükleniyor...</div>
+                </div>
+                <div class="grafik-baslik"><span>Günlük işlemler</span><span id="istatistikDonemEtiketi"></span></div>
+                <div class="gunluk-grafik" id="gunlukGrafik" aria-label="Günlük indirme grafiği">
+                </div>
+                <div class="istatistik-alt">
+                    <div>
+                        <div class="grafik-baslik"><span>Platform dağılımı</span></div>
+                        <div class="dagilim-liste" id="platformDagilimi"></div>
+                    </div>
+                    <div>
+                        <div class="grafik-baslik"><span>Format dağılımı</span></div>
+                        <div class="dagilim-liste" id="formatDagilimi"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="bolum">
+                <h3>Platform İstatistikleri</h3>
+                <table>
+                    <tr>
+                        <th>Platform</th>
+                        <th>İndirme</th>
+                    </tr>
+                    <% platformIstatistik.forEach(p=> { %>
+                        <tr>
+                            <td>
+                                <%= p.platform %>
+                            </td>
+                            <td>
+                                <%= p.sayi %>
+                            </td>
+                        </tr>
+                        <% }) %>
+                        <% if (!platformIstatistik.length) { %>
+                        <tr>
+                            <td colspan="2" class="renk-yazi2">Henüz veri yok</td>
+                        </tr>
+                        <% } %>
+                </table>
+            </div>
+            <div class="bolum">
+                <h3>Son İşlemler</h3>
+                <table>
+                    <tr>
+                        <th>Platform</th>
+                        <th>Format</th>
+                        <th>Kalite</th>
+                        <th>Durum</th>
+                    </tr>
+                    <% sonIslemler.forEach(i=> { %>
+                        <% const durumAdlari = { tamamlandi: 'Tamamlandı', hata: 'Hata', isleniyor: 'İşleniyor', bekliyor: 'Bekliyor', iptal: 'İptal edildi' }; %>
+                        <tr>
+                            <td>
+                                <%= i.platform %>
+                            </td>
+                            <td>
+                                <%= i.format %>
+                            </td>
+                            <td>
+                                <%= i.kalite || '-' %>
+                            </td>
+                            <td class="durum-<%= i.durum %>">
+                                <%= durumAdlari[i.durum] || (i.durum ? i.durum.charAt(0).toLocaleUpperCase('tr-TR') + i.durum.slice(1) : '-') %>
+                            </td>
+                        </tr>
+                        <% }) %>
+                            <% if (!sonIslemler.length) { %>
+                                <tr>
+                                    <td colspan="4" class="renk-yazi2">Henüz işlem yok</td>
+                                </tr>
+                                <% } %>
+                </table>
+            </div>
+            <div class="bolum hata-bolumu kapali" id="hataBolumu">
+                <div class="hata-ust">
+                    <h3>Hata Merkezi</h3>
+                    <div class="hata-ust-sag">
+                        <select class="hata-filtre" id="hataFiltresi" aria-label="Hata kategorisi">
+                            <option value="Tümü">Tüm kategoriler</option>
+                            <option value="yt-dlp">yt-dlp</option>
+                            <option value="Bağlantı">Bağlantı</option>
+                            <option value="Format / Dosya">Format / Dosya</option>
+                            <option value="Sunucu">Sunucu</option>
+                            <option value="Diğer">Diğer</option>
+                        </select>
+                        <button class="hata-toggle" id="hataToggle" type="button" aria-expanded="false" aria-controls="hataIcerigi">Göster</button>
+                    </div>
+                </div>
+                <div id="hataIcerigi">
+                    <div class="hata-gruplar" id="hataGruplari" aria-live="polite"></div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Kategori</th>
+                                <th>Mesaj</th>
+                                <th>Yol</th>
+                                <th>Zaman</th>
+                            </tr>
+                        </thead>
+                        <tbody id="hataListesi">
+                            <tr>
+                                <td colspan="4" class="renk-yazi2">Hatalar yükleniyor...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            </div>
+            <div class="panel-sekme gizli" id="panelSekmeHesaplar">
+                <div class="hesaplar-grid">
+                    <div class="hesap-kutu bolum hesap-kutu-sifir">
+                        <h3>👤 Kullanıcı Adı Değiştir</h3>
+                        <p>Yönetici paneli giriş kullanıcı adınızı güncelleyin. Güvenlik için mevcut şifrenizi girmeniz gerekir.</p>
+                        <div class="giris-alani">
+                            <div class="mevcut-kullanici-bilgi">Mevcut Kullanıcı Adı: <strong id="mevcutKullaniciAdiEtiketi"><%= adminAdi %></strong></div>
+                            <input type="text" id="yeniKullaniciAdi" placeholder="Yeni kullanıcı adı" autocomplete="username">
+                            <input type="password" id="kullaniciAdiMevcutSifre" placeholder="Mevcut şifreniz" autocomplete="current-password">
+                            <button class="kaydet-btn" id="kullaniciAdiGuncelleBtn" type="button">Kullanıcı Adını Güncelle</button>
+                            <div class="mesaj" id="kullaniciAdiMesaj"></div>
+                        </div>
+                    </div>
+                    <div class="hesap-kutu bolum hesap-kutu-sifir">
+                        <h3>🔒 Şifre Değiştir</h3>
+                        <p>Hesabınızın güvenliği için en az 8 karakterden oluşan güçlü bir şifre belirleyin.</p>
+                        <div class="giris-alani">
+                            <input type="password" id="mevcutSifre" placeholder="Mevcut şifre" autocomplete="current-password">
+                            <input type="password" id="yeniSifre" placeholder="Yeni şifre (min 8 karakter)" autocomplete="new-password">
+                            <input type="password" id="yeniSifreTekrar" placeholder="Yeni şifre tekrar" autocomplete="new-password">
+                            <button class="kaydet-btn" id="sifreGuncelleBtn" type="button">Şifreyi Güncelle</button>
+                            <div class="mesaj" id="sifreMesaj"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+            const sistemDurumuAlanlari = [
+                ['node', 'Node.js'],
+                ['javascriptRuntime', 'JavaScript runtime'],
+                ['ytDlp', 'yt-dlp'],
+                ['ffmpeg', 'FFmpeg'],
+                ['geciciKlasor', 'Geçici klasör'],
+                ['veritabani', 'Veritabanı']
+            ];
+            function sistemDurumuMetni(durum) {
+                return durum === 'iyi' ? 'Çalışıyor' : (durum === 'uyari' ? 'Uyarı' : 'Hata');
+            }
+            function sistemDurumuDetayi(anahtar, veri) {
+                if (anahtar === 'geciciKlasor') return `${veri.mesaj} ${veri.dosyaSayisi} dosya · ${veri.boyutMb} MB`;
+                return [veri.surum, veri.mesaj].filter(Boolean).join(' · ');
+            }
+            function htmlGuvenli(deger) {
+                return String(deger ?? '').replace(/[&<>"']/g, karakter => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[karakter]);
+            }
+            async function sistemDurumunuGetir() {
+                const grid = document.getElementById('sistemDurumuGrid');
+                const zaman = document.getElementById('sistemDurumuZaman');
+                const buton = document.getElementById('sistemDurumuYenile');
+                if (buton) buton.disabled = true;
+                grid.innerHTML = '<div class="sistem-durum-detay">Kontroller çalıştırılıyor...</div>';
+                try {
+                    const yanit = await fetch('/admin/sistem-durumu', { headers: { Accept: 'application/json' } });
+                    const veri = await yanit.json();
+                    if (!yanit.ok || !veri.basari) throw new Error(veri.mesaj || 'Kontroller alınamadı.');
+                    grid.innerHTML = sistemDurumuAlanlari.map(([anahtar, baslik]) => {
+                        const durum = veri[anahtar] || { durum: 'hata', mesaj: 'Bilgi alınamadı.' };
+                        return `<div class="sistem-durum"><div class="sistem-durum-ust"><span class="sistem-rozet ${htmlGuvenli(durum.durum)}">${htmlGuvenli(sistemDurumuMetni(durum.durum))}</span></div><span class="sistem-durum-baslik">${htmlGuvenli(baslik)}</span><div class="sistem-durum-detay">${htmlGuvenli(sistemDurumuDetayi(anahtar, durum))}</div></div>`;
+                    }).join('');
+                    zaman.textContent = `Son kontrol: ${new Date(veri.zaman).toLocaleString('tr-TR')}`;
+                } catch (hata) {
+                    grid.innerHTML = `<div class="sistem-durum-detay renk-hata">${htmlGuvenli(hata.message || 'Sistem durumu alınamadı.')}</div>`;
+                    zaman.textContent = '';
+                } finally {
+                    if (buton) buton.disabled = false;
+                }
+            }
+            async function aktifIndirmeleriGetir() {
+                const liste = document.getElementById('aktifIndirmeListesi');
+                try {
+                    const yanit = await fetch('/admin/aktif-indirmeler', { headers: { Accept: 'application/json' } });
+                    const veri = await yanit.json();
+                    if (!yanit.ok || !veri.basari) throw new Error(veri.mesaj || 'Aktif işler alınamadı.');
+                    const kayitlar = [...(veri.aktif || []), ...(veri.sonlanan || []).slice(0, 3)];
+                    if (!kayitlar.length) {
+                        liste.innerHTML = '<div class="sistem-durum-detay">Şu anda aktif indirme yok.</div>';
+                    } else {
+                        liste.innerHTML = kayitlar.map(kayit => {
+                            const sonlandi = kayit.durum !== 'isleniyor';
+                            const durum = kayit.durum === 'tamamlandi' ? 'Tamamlandı' : (kayit.durum === 'hata' ? 'Hata' : 'İndiriliyor');
+                            return `<div class="aktif-indirme ${htmlGuvenli(kayit.durum)}"><div><div class="aktif-indirme-baslik">${htmlGuvenli(kayit.baslik || 'Başlıksız video')}</div><div class="aktif-indirme-meta">${htmlGuvenli(kayit.platform || '-')} · ${htmlGuvenli(String(kayit.format || '').toUpperCase())}${kayit.kalite ? ` · ${htmlGuvenli(kayit.kalite)}` : ''} · ${kayit.gecenSaniye || 0} sn</div></div><div class="aktif-indirme-durum">${sonlandi ? '' : '<span class="aktif-indirme-nokta"></span>'}${durum}</div></div>`;
+                        }).join('');
+                    }
+                    document.getElementById('aktifIndirmeZamani').textContent = `Son kontrol: ${new Date().toLocaleTimeString('tr-TR')}`;
+                } catch (hata) {
+                    liste.innerHTML = `<div class="sistem-durum-detay renk-hata">${htmlGuvenli(hata.message || 'Aktif işler alınamadı.')}</div>`;
+                }
+            }
+            async function ayarlariGetir() {
+                try {
+                    const yanit = await fetch('/admin/ayarlar', { headers: { Accept: 'application/json' } });
+                    const veri = await yanit.json();
+                    if (!yanit.ok || !veri.basari) throw new Error(veri.mesaj || 'Ayarlar alınamadı.');
+                    document.getElementById('ayarMaksVideo').value = veri.ayarlar.maksTopluVideo;
+                    document.getElementById('ayarSaklama').value = String(veri.ayarlar.geciciDosyaSuresi);
+                    document.getElementById('ayarKalite').value = veri.ayarlar.varsayilanKalite;
+                } catch (hata) {
+                    ayarMesajiGoster('hata2', hata.message || 'Ayarlar alınamadı.');
+                }
+            }
+            function ayarMesajiGoster(tur, metin) {
+                const mesaj = document.getElementById('ayarMesaj');
+                mesaj.className = `mesaj aktif ${tur}`;
+                mesaj.textContent = metin;
+            }
+            async function ayarlariKaydet() {
+                const buton = document.getElementById('ayarKaydetBtn');
+                buton.disabled = true;
+                try {
+                    const yanit = await fetch('/admin/ayarlar', {
+                        method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+                        body: JSON.stringify({ maksTopluVideo: Number(document.getElementById('ayarMaksVideo').value), geciciDosyaSuresi: Number(document.getElementById('ayarSaklama').value), varsayilanKalite: document.getElementById('ayarKalite').value })
+                    });
+                    const veri = await yanit.json();
+                    if (!yanit.ok || !veri.basari) throw new Error(veri.mesaj || 'Ayarlar kaydedilemedi.');
+                    ayarMesajiGoster('basari', veri.mesaj);
+                } catch (hata) {
+                    ayarMesajiGoster('hata2', hata.message || 'Ayarlar kaydedilemedi.');
+                } finally {
+                    buton.disabled = false;
+                }
+            }
+            async function guvenlikOlaylariniGetir() {
+                const liste = document.getElementById('guvenlikOlayListesi');
+                try {
+                    const yanit = await fetch('/admin/guvenlik-olaylari', { headers: { Accept: 'application/json' } });
+                    const veri = await yanit.json();
+                    if (!yanit.ok || !veri.basari) throw new Error(veri.mesaj || 'Güvenlik olayları alınamadı.');
+                    liste.innerHTML = veri.olaylar.length ? veri.olaylar.map(olay => `<tr><td>${htmlGuvenli(olay.kullanici || '-')}</td><td>${htmlGuvenli(olay.olay)}</td><td class="${olay.basarili ? 'guvenlik-basarili' : ''}">${olay.basarili ? 'Başarılı' : 'Başarısız'}</td><td class="hata-zaman">${new Date(Number(olay.zaman) * 1000).toLocaleString('tr-TR')}</td></tr>`).join('') : '<tr><td colspan="4" class="renk-yazi2">Henüz güvenlik olayı yok.</td></tr>';
+                } catch (hata) {
+                    liste.innerHTML = `<tr><td colspan="4" class="renk-hata">${htmlGuvenli(hata.message || 'Olaylar alınamadı.')}</td></tr>`;
+                }
+            }
+            async function kullanimAnaliziniGetir() {
+                const aralik = document.getElementById('kullanimAralik').value;
+                const ozetAlani = document.getElementById('kullanimOzet');
+                try {
+                    const yanit = await fetch(`/admin/kullanim-analizi?aralik=${encodeURIComponent(aralik)}`, { headers: { Accept: 'application/json' } });
+                    const veri = await yanit.json();
+                    if (!yanit.ok || !veri.basari) throw new Error(veri.mesaj || 'Kullanım analizi alınamadı.');
+                    const ozet = veri.ozet;
+                    ozetAlani.innerHTML = `<div class="kullanim-kart"><span>Arama</span><strong>${ozet.arama}</strong></div><div class="kullanim-kart"><span>Analiz</span><strong>${ozet.analiz}</strong></div><div class="kullanim-kart"><span>İndirme</span><strong>${ozet.indirme}</strong></div><div class="kullanim-kart"><span>Tekil ziyaretçi</span><strong>${ozet.tekilZiyaretci}</strong></div><div class="kullanim-kart"><span>Yoğun saat</span><strong>${htmlGuvenli(ozet.enYogunSaat)}</strong></div>`;
+                    const saatler = veri.saatler || [];
+                    const enYuksek = Math.max(...saatler.map(saat => saat.sayi), 1);
+                    document.getElementById('saatGrafik').innerHTML = saatler.map(saat => `<span class="saat-sutun" data-saat="${saat.saat}" title="${saat.saat}:00 · ${saat.sayi} işlem" style="height:${Math.max(Math.round((saat.sayi / enYuksek) * 100), 2)}%"></span>`).join('');
+                    document.getElementById('kullanimYogunSaat').textContent = `${veri.aralik} günlük dönem`;
+                } catch (hata) {
+                    ozetAlani.innerHTML = `<div class="sistem-durum-detay renk-hata">${htmlGuvenli(hata.message || 'Analiz alınamadı.')}</div>`;
+                }
+            }
+            function guvenlikPaneliniDegistir() {
+                const icerik = document.getElementById('guvenlikIcerigi');
+                const buton = document.getElementById('guvenlikToggle');
+                const acik = icerik.hidden;
+                icerik.hidden = !acik;
+                buton.setAttribute('aria-expanded', String(acik));
+                buton.textContent = acik ? 'Gizle' : 'Göster';
+                if (acik) guvenlikOlaylariniGetir();
+            }
+            function dagilimGoster(kapsayiciId, liste) {
+                const kapsayici = document.getElementById(kapsayiciId);
+                if (!liste.length) {
+                    kapsayici.innerHTML = '<span class="sistem-durum-detay">Bu dönemde veri yok.</span>';
+                    return;
+                }
+                const enYuksek = Math.max(...liste.map(kayit => kayit.sayi), 1);
+                kapsayici.innerHTML = liste.map(kayit => `<div class="dagilim-satir"><span class="dagilim-etiket">${htmlGuvenli(String(kayit.etiket).toUpperCase())}</span><span class="dagilim-cubuk"><span class="dagilim-dolgu" style="width:${Math.round((kayit.sayi / enYuksek) * 100)}%"></span></span><strong>${kayit.sayi}</strong></div>`).join('');
+            }
+            function istatistikleriGoster(veri) {
+                const ozet = veri.ozet || {};
+                document.getElementById('donemKartlari').innerHTML = `
+                <div class="donem-kart"><div class="etiket">Toplam işlem</div><div class="deger">${ozet.toplam || 0}</div></div>
+                <div class="donem-kart"><div class="etiket">Başarılı indirme</div><div class="deger basari">${ozet.basarili || 0}</div></div>
+                <div class="donem-kart"><div class="etiket">Başarısız işlem</div><div class="deger renk-hata">${ozet.hatali || 0}</div></div>
+                <div class="donem-kart"><div class="etiket">Başarı oranı</div><div class="deger">%${ozet.basariOrani || 0}</div></div>
+                <div class="donem-kart"><div class="etiket">Tekil ziyaretçi</div><div class="deger">${ozet.tekilZiyaretci || 0}</div></div>`;
+                const gunluk = veri.gunluk || [];
+                const enYuksek = Math.max(...gunluk.map(gun => gun.toplam), 1);
+                const grafik = document.getElementById('gunlukGrafik');
+                grafik.style.setProperty('--gun-sayisi', Math.max(gunluk.length, 1));
+                grafik.innerHTML = gunluk.map(gun => `<div class="grafik-gun" title="${htmlGuvenli(gun.etiket)}: ${gun.toplam} işlem"><span class="grafik-sutun" style="height:${Math.max(Math.round((gun.toplam / enYuksek) * 100), 2)}%"></span><small>${htmlGuvenli(gun.etiket)}</small></div>`).join('');
+                document.getElementById('istatistikDonemEtiketi').textContent = `Son ${veri.aralik} gün`;
+                dagilimGoster('platformDagilimi', veri.platformlar || []);
+                dagilimGoster('formatDagilimi', veri.formatlar || []);
+            }
+            async function istatistikleriGetir() {
+                const aralik = document.getElementById('istatistikAralik').value;
+                const kartlar = document.getElementById('donemKartlari');
+                kartlar.innerHTML = '<div class="sistem-durum-detay">İstatistikler yükleniyor...</div>';
+                try {
+                    const yanit = await fetch(`/admin/istatistikler?aralik=${encodeURIComponent(aralik)}`, { headers: { Accept: 'application/json' } });
+                    const veri = await yanit.json();
+                    if (!yanit.ok || !veri.basari) throw new Error(veri.mesaj || 'İstatistikler alınamadı.');
+                    istatistikleriGoster(veri);
+                } catch (hata) {
+                    kartlar.innerHTML = `<div class="sistem-durum-detay renk-hata">${htmlGuvenli(hata.message || 'İstatistikler alınamadı.')}</div>`;
+                }
+            }
+            function hatalariGoster(veri) {
+                const gruplar = document.getElementById('hataGruplari');
+                const liste = document.getElementById('hataListesi');
+                gruplar.innerHTML = Object.entries(veri.gruplar || {}).map(([kategori, sayi]) => `<span class="hata-grup">${htmlGuvenli(kategori)}<strong>${sayi}</strong></span>`).join('');
+                if (!veri.kayitlar?.length) {
+                    liste.innerHTML = '<tr><td colspan="4" class="renk-yazi2">Bu filtrede hata kaydı yok.</td></tr>';
+                    return;
+                }
+                liste.innerHTML = veri.kayitlar.map(kayit => `<tr><td><span class="sistem-rozet hata">${htmlGuvenli(kayit.kategori)}</span></td><td class="hata-detay renk-hata">${htmlGuvenli(kayit.mesaj)}</td><td>${htmlGuvenli(kayit.yol || '-')}</td><td class="hata-zaman">${kayit.zaman ? new Date(Number(kayit.zaman) * 1000).toLocaleString('tr-TR') : '-'}</td></tr>`).join('');
+            }
+            async function hatalariGetir() {
+                const kategori = document.getElementById('hataFiltresi').value;
+                const liste = document.getElementById('hataListesi');
+                liste.innerHTML = '<tr><td colspan="4" class="renk-yazi2">Hatalar yükleniyor...</td></tr>';
+                try {
+                    const yanit = await fetch(`/admin/hatalar?kategori=${encodeURIComponent(kategori)}`, { headers: { Accept: 'application/json' } });
+                    const veri = await yanit.json();
+                    if (!yanit.ok || !veri.basari) throw new Error(veri.mesaj || 'Hatalar alınamadı.');
+                    hatalariGoster(veri);
+                } catch (hata) {
+                    liste.innerHTML = `<tr><td colspan="4" class="renk-hata">${htmlGuvenli(hata.message || 'Hatalar alınamadı.')}</td></tr>`;
+                }
+            }
+            function hataMerkeziniDegistir() {
+                const bolum = document.getElementById('hataBolumu');
+                const buton = document.getElementById('hataToggle');
+                const kapali = bolum.classList.toggle('kapali');
+                buton.setAttribute('aria-expanded', String(!kapali));
+                buton.textContent = kapali ? 'Göster' : 'Gizle';
+            }
+            async function sifreDegistir() {
+                const el = document.getElementById('sifreMesaj');
+                try {
+                    const yanit = await fetch('/admin/sifre-degistir', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            mevcutSifre: document.getElementById('mevcutSifre').value,
+                            yeniSifre: document.getElementById('yeniSifre').value,
+                            yeniSifreTekrar: document.getElementById('yeniSifreTekrar').value
+                        })
+                    });
+                    const veri = await yanit.json();
+                    el.className = 'mesaj aktif ' + (veri.basari ? 'basari' : 'hata2');
+                    el.textContent = veri.mesaj;
+                    if (veri.basari) {
+                        document.getElementById('mevcutSifre').value = '';
+                        document.getElementById('yeniSifre').value = '';
+                        document.getElementById('yeniSifreTekrar').value = '';
+                    }
+                } catch {
+                    el.className = 'mesaj aktif hata2';
+                    el.textContent = 'İstek gönderilemedi.';
+                }
+            }
+            async function kullaniciAdiDegistir() {
+                const el = document.getElementById('kullaniciAdiMesaj');
+                const yeniKullaniciAdi = document.getElementById('yeniKullaniciAdi').value.trim();
+                const mevcutSifre = document.getElementById('kullaniciAdiMevcutSifre').value;
+                if (!yeniKullaniciAdi || !mevcutSifre) {
+                    el.className = 'mesaj aktif hata2';
+                    el.textContent = 'Lütfen tüm alanları doldurun.';
+                    return;
+                }
+                try {
+                    const yanit = await fetch('/admin/kullanici-adi-degistir', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ yeniKullaniciAdi, mevcutSifre })
+                    });
+                    const veri = await yanit.json();
+                    el.className = 'mesaj aktif ' + (veri.basari ? 'basari' : 'hata2');
+                    el.textContent = veri.mesaj;
+                    if (veri.basari) {
+                        document.getElementById('mevcutKullaniciAdiEtiketi').textContent = veri.yeniKullaniciAdi;
+                        document.getElementById('aktifAdminAdi').textContent = veri.yeniKullaniciAdi;
+                        document.getElementById('yeniKullaniciAdi').value = '';
+                        document.getElementById('kullaniciAdiMevcutSifre').value = '';
+                    }
+                } catch {
+                    el.className = 'mesaj aktif hata2';
+                    el.textContent = 'İstek gönderilemedi.';
+                }
+            }
+            function sekmeDegistir(sekmeAdi) {
+                const dashboardSekme = document.getElementById('panelSekmeDashboard');
+                const hesaplarSekme = document.getElementById('panelSekmeHesaplar');
+                const dashboardLink = document.getElementById('sekmeDashboardLink');
+                const hesaplarLink = document.getElementById('sekmeHesaplarLink');
+                const baslik = document.getElementById('panelBaslik');
+
+                if (sekmeAdi === 'hesaplar') {
+                    dashboardSekme.classList.add('gizli');
+                    hesaplarSekme.classList.remove('gizli');
+                    dashboardLink.classList.remove('aktif');
+                    hesaplarLink.classList.add('aktif');
+                    if (baslik) baslik.textContent = 'Kullanıcı Hesapları';
+                } else {
+                    dashboardSekme.classList.remove('gizli');
+                    hesaplarSekme.classList.add('gizli');
+                    dashboardLink.classList.add('aktif');
+                    hesaplarLink.classList.remove('aktif');
+                    if (baslik) baslik.textContent = 'Ana Panel';
+                }
+            }
+            function sidebarResizerKur() {
+                const resizer = document.getElementById('kenarResizer');
+                if (!resizer) return;
+                const minGenislik = <%= sidebarMin %>;
+                const maxGenislik = <%= sidebarMax %>;
+                let baslangicX = 0;
+                let baslangicGenislik = minGenislik;
+                let suankiGenislik = minGenislik;
+                const baslangicStyle = getComputedStyle(document.documentElement).getPropertyValue('--kenar-genislik');
+                if (baslangicStyle) {
+                    suankiGenislik = Math.min(maxGenislik, Math.max(minGenislik, parseInt(baslangicStyle, 10) || minGenislik));
+                    document.documentElement.style.setProperty('--kenar-genislik', suankiGenislik + 'px');
+                }
+                async function genislikKaydet(g) {
+                    try {
+                        await fetch('/admin/sidebar-genislik', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ genislik: g })
+                        });
+                    } catch {}
+                }
+                function onPointerMove(e) {
+                    const dx = e.clientX - baslangicX;
+                    suankiGenislik = Math.min(maxGenislik, Math.max(minGenislik, Math.round(baslangicGenislik + dx)));
+                    document.documentElement.style.setProperty('--kenar-genislik', suankiGenislik + 'px');
+                }
+                function onPointerUp() {
+                    resizer.classList.remove('surukleniyor');
+                    document.body.style.cursor = '';
+                    document.body.style.userSelect = '';
+                    window.removeEventListener('pointermove', onPointerMove);
+                    window.removeEventListener('pointerup', onPointerUp);
+                    genislikKaydet(suankiGenislik);
+                }
+                resizer.addEventListener('pointerdown', (e) => {
+                    baslangicX = e.clientX;
+                    const mevcutStyle = getComputedStyle(document.documentElement).getPropertyValue('--kenar-genislik');
+                    baslangicGenislik = parseInt(mevcutStyle, 10) || minGenislik;
+                    resizer.classList.add('surukleniyor');
+                    document.body.style.cursor = 'col-resize';
+                    document.body.style.userSelect = 'none';
+                    window.addEventListener('pointermove', onPointerMove);
+                    window.addEventListener('pointerup', onPointerUp);
+                });
+                resizer.addEventListener('dblclick', () => {
+                    suankiGenislik = minGenislik;
+                    document.documentElement.style.setProperty('--kenar-genislik', minGenislik + 'px');
+                    genislikKaydet(minGenislik);
+                });
+            }
+            document.addEventListener('DOMContentLoaded', () => {
+                sidebarResizerKur();
+                document.getElementById('sekmeDashboardLink')?.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    history.replaceState(null, '', '#dashboard');
+                    sekmeDegistir('dashboard');
+                });
+                document.getElementById('sekmeHesaplarLink')?.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    history.replaceState(null, '', '#hesaplar');
+                    sekmeDegistir('hesaplar');
+                });
+                if (window.location.hash === '#hesaplar') {
+                    sekmeDegistir('hesaplar');
+                } else {
+                    sekmeDegistir('dashboard');
+                }
+                window.addEventListener('hashchange', () => {
+                    sekmeDegistir(window.location.hash === '#hesaplar' ? 'hesaplar' : 'dashboard');
+                });
+                document.getElementById('kullaniciAdiGuncelleBtn')?.addEventListener('click', kullaniciAdiDegistir);
+                document.getElementById('sifreGuncelleBtn')?.addEventListener('click', sifreDegistir);
+                document.getElementById('sistemDurumuYenile')?.addEventListener('click', sistemDurumunuGetir);
+                sistemDurumunuGetir();
+                aktifIndirmeleriGetir();
+                window.setInterval(aktifIndirmeleriGetir, 3000);
+                document.getElementById('ayarKaydetBtn')?.addEventListener('click', ayarlariKaydet);
+                ayarlariGetir();
+                document.getElementById('guvenlikToggle')?.addEventListener('click', guvenlikPaneliniDegistir);
+                document.getElementById('kullanimAralik')?.addEventListener('change', kullanimAnaliziniGetir);
+                kullanimAnaliziniGetir();
+                document.getElementById('istatistikAralik')?.addEventListener('change', istatistikleriGetir);
+                istatistikleriGetir();
+                document.getElementById('hataFiltresi')?.addEventListener('change', hatalariGetir);
+                hatalariGetir();
+                document.getElementById('hataToggle')?.addEventListener('click', hataMerkeziniDegistir);
+            });
+        </script>
+    </body>
+</html>
