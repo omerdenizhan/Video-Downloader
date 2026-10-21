@@ -1,4 +1,4 @@
-# D-Tube Video İndirici
+<h1 align="center">⭐ D-Tube Video İndirici ⭐</h1>
 
 YouTube, YouTube Shorts, Instagram, Twitter / X ve TikTok bağlantılarından video ve ses indirmeyi sağlayan, kayıt gerektirmeyen bir web uygulamasıdır. Üyelik olmadan kullanılır; yönetim için ayrı bir admin paneli içerir.
 
