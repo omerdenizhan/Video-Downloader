@@ -224,7 +224,7 @@ SQLite dosyası `veritabani/database.db` konumunda tutulur. [sql.js](https://git
 
 IP adresleri düz metin olarak saklanmaz; yalnızca hash'in ilk 16 karakteri tutulur.
 
-## 📌 Uygulama ayarları
+## 📌 Uygulama Ayarları
 
 Admin panelindeki **Uygulama Ayarları** bölümünden değiştirilir ve `ayarlar` tablosunda saklanır. Değerler sunucuda aşağıdaki aralıklara sınırlanır:
 
