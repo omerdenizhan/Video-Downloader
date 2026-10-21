@@ -1,0 +1,7 @@
+node_modules/
+gecici/*
+!gecici/.gitkeep
+bin/
+veritabani/*.db
+.env
+*.log
