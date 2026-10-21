@@ -4,24 +4,6 @@ YouTube, YouTube Shorts, Instagram, Twitter / X ve TikTok bağlantılarından vi
 
 Sunucu tarafı **Node.js + Express**, görünümler **EJS**, veritabanı **sql.js (SQLite)**, indirme motoru **yt-dlp** ve **FFmpeg**'dir.
 
-## 📌 İçindekiler
-
-- [Özellikler](#özellikler)
-- [Gereksinimler](#gereksinimler)
-- [Kurulum](#kurulum)
-- [Yapılandırma (.env)](#yapılandırma-env)
-- [Çalıştırma](#çalıştırma)
-- [Admin paneli](#admin-paneli)
-- [Proje yapısı](#proje-yapısı)
-- [HTTP uç noktaları](#http-uç-noktaları)
-- [Veritabanı](#veritabanı)
-- [Uygulama ayarları](#uygulama-ayarları)
-- [Arayüz ve stiller](#arayüz-ve-stiller)
-- [Harici araçlar (yt-dlp / FFmpeg)](#harici-araçlar-yt-dlp--ffmpeg)
-- [Güvenlik](#güvenlik)
-- [Sorun giderme](#sorun-giderme)
-- [Lisans](#lisans)
-
 ## 📌 Özellikler
 
 **Kullanıcı tarafı**
