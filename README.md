@@ -4,7 +4,7 @@ YouTube, YouTube Shorts, Instagram, Twitter / X ve TikTok bağlantılarından vi
 
 Sunucu tarafı **Node.js + Express**, görünümler **EJS**, veritabanı **sql.js (SQLite)**, indirme motoru **yt-dlp** ve **FFmpeg**'dir.
 
-## İçindekiler
+## 📌 İçindekiler
 
 - [Özellikler](#özellikler)
 - [Gereksinimler](#gereksinimler)
@@ -22,7 +22,7 @@ Sunucu tarafı **Node.js + Express**, görünümler **EJS**, veritabanı **sql.j
 - [Sorun giderme](#sorun-giderme)
 - [Lisans](#lisans)
 
-## Özellikler
+## 📌 Özellikler
 
 **Kullanıcı tarafı**
 - Bağlantı yapıştırarak video / ses indirme (YouTube, Shorts, Instagram, Twitter / X, TikTok)
@@ -34,7 +34,7 @@ Sunucu tarafı **Node.js + Express**, görünümler **EJS**, veritabanı **sql.j
 - Aydınlık / karanlık tema (tercih tarayıcıda saklanır)
 - Kayıt veya üyelik gerekmez
 
-**Yönetici tarafı**
+**Yönetici Tarafı**
 - Genel istatistikler: toplam indirme, tekil ziyaretçi, en çok kullanılan platform ve format
 - Sistem sağlık durumu: Node.js, JavaScript runtime, yt-dlp, FFmpeg, geçici klasör, veritabanı
 - Aktif indirmelerin canlı listesi
@@ -56,7 +56,7 @@ Sunucu tarafı **Node.js + Express**, görünümler **EJS**, veritabanı **sql.j
 
 Desteklenen sistemler: Windows (x64, arm64, ia32), Linux (x64, arm64, arm), macOS (x64, arm64) ve Android / Termux.
 
-## Kurulum
+## 📌 Kurulum
 
 ```bash
 # 1) Bağımlılıkları kur (yt-dlp ve FFmpeg de otomatik indirilir)
@@ -74,7 +74,7 @@ cp .env.ornek .env        # Windows: copy .env.ornek .env
 npm run araclari-kur
 ```
 
-## Yapılandırma (.env)
+## 📌 Yapılandırma (.env)
 
 `.env.ornek` dosyasını `.env` olarak kopyalayın.
 
@@ -85,7 +85,7 @@ npm run araclari-kur
 | `NODE_ENV` | `production` | Çalışma ortamı |
 | `SESSION_SECURE` | `false` | HTTPS üzerinden yayın yapıyorsanız `true` yapın (çerez yalnızca HTTPS'te gönderilir) |
 
-İsteğe bağlı değişkenler:
+İsteğe Bağlı Değişkenler:
 
 | Değişken | Açıklama |
 |---|---|
@@ -97,7 +97,7 @@ npm run araclari-kur
 
 > `.env` dosyası `.gitignore` içindedir; depoya eklemeyin.
 
-## Çalıştırma
+## 📌 Çalıştırma
 
 ```bash
 npm start
@@ -115,7 +115,7 @@ Admin : http://localhost:3000/admin/giris
 
 Her 30 dakikada bir `gecici/` klasöründeki süresi dolmuş dosyalar otomatik silinir (saklama süresi admin panelinden ayarlanır).
 
-## Admin paneli
+## 📌 Admin Paneli
 
 İlk çalıştırmada veritabanı boşsa otomatik olarak bir yönetici hesabı oluşturulur:
 
@@ -129,21 +129,7 @@ Panelde iki sekme bulunur:
 - **Ana Panel:** istatistikler, sistem durumu, aktif indirmeler, ayarlar, analiz, hata merkezi, güvenlik olayları
 - **Kullanıcı Hesapları:** kullanıcı adı ve şifre değiştirme
 
-### Kenar çubuğu genişliği
-
-Kenar çubuğunun kenarından sürükleyerek genişlik ayarlanabilir; çift tıklayınca minimuma döner. Seçilen değer veritabanında saklanır.
-
-Minimum, maksimum ve varsayılan genişlik **tek bir yerden** ayarlanır: `sunucu/servisler/ayarlar.js`
-
-```js
-const SIDEBAR_MIN = 220;
-const SIDEBAR_MAX = 275;
-const SIDEBAR_VARSAYILAN = 220;
-```
-
-Bu değerler hem CSS'e, hem sürükleme koduna, hem de sunucu tarafındaki sınırlamaya buradan aktarılır.
-
-## Proje yapısı
+## 📌 Proje Yapısı
 
 ```
 .
@@ -179,7 +165,7 @@ Bu değerler hem CSS'e, hem sürükleme koduna, hem de sunucu tarafındaki sın�
 └── package.json
 ```
 
-## HTTP uç noktaları
+## 📌 HTTP Uç Noktaları
 
 ### Genel
 
@@ -222,7 +208,7 @@ Yalnızca `platform.js` içinde izin verilen alan adları kabul edilir (YouTube,
 
 `/admin/giris` ve `/admin/cikis` dışındaki tüm admin yolları oturum açmayı gerektirir.
 
-## Veritabanı
+## 📌 Veritabanı
 
 SQLite dosyası `veritabani/database.db` konumunda tutulur. [sql.js](https://github.com/sql-js/sql.js) kullanıldığı için veritabanı bellekte çalışır ve her yazma işleminden sonra dosyaya kaydedilir. Tablolar ilk çalıştırmada otomatik oluşturulur.
 
@@ -238,7 +224,7 @@ SQLite dosyası `veritabani/database.db` konumunda tutulur. [sql.js](https://git
 
 IP adresleri düz metin olarak saklanmaz; yalnızca hash'in ilk 16 karakteri tutulur.
 
-## Uygulama ayarları
+## 📌 Uygulama ayarları
 
 Admin panelindeki **Uygulama Ayarları** bölümünden değiştirilir ve `ayarlar` tablosunda saklanır. Değerler sunucuda aşağıdaki aralıklara sınırlanır:
 
@@ -251,7 +237,7 @@ Admin panelindeki **Uygulama Ayarları** bölümünden değiştirilir ve `ayarla
 
 `bakim_modu` ayarı da veritabanında tutulur ancak şu an istek akışında kullanılmaz.
 
-## Arayüz ve stiller
+## 📌 Arayüz ve Stiller
 
 Projedeki **tüm CSS** `genel/tema.css` dosyasındadır. EJS şablonlarında `<style>` bloğu bulunmaz (tek istisna: admin panelindeki kenar çubuğu genişliği değişkenleri, çünkü sunucudan gelen değerlerdir).
 
@@ -274,7 +260,7 @@ Tema renkleri `:root` / `[data-tema="aydinlik"]` ve `[data-tema="karanlik"]` alt
 
 Fontlar Google Fonts'tan yüklenir (Sora, JetBrains Mono).
 
-## Harici araçlar (yt-dlp / FFmpeg)
+## 📌 Harici Araçlar (yt-dlp / FFmpeg)
 
 Uygulama açılırken `servisler/araclar.js` araçları şu sırayla arar:
 
@@ -292,7 +278,7 @@ pkg install python ffmpeg
 npm run araclari-kur
 ```
 
-## Güvenlik
+## 📌 Güvenlik
 
 - **Helmet** ile güvenlik başlıkları ve Content Security Policy
 - **Oturum:** `httpOnly`, `sameSite=strict` çerez, 8 saat geçerlilik; girişte oturum yeniden oluşturulur
@@ -313,7 +299,7 @@ Yayına almadan önce kontrol listesi:
 - [ ] HTTPS kullanıyorsanız `SESSION_SECURE=true` yapın
 - [ ] Uygulama bir ters vekil (nginx vb.) arkasında çalışacak şekilde `trust proxy = 1` ile yapılandırılmıştır; doğrudan internete açıyorsanız bu ayarı gözden geçirin
 
-## Sorun giderme
+## 📌 Sorun giderme
 
 | Belirti | Olası neden / çözüm |
 |---|---|
@@ -324,8 +310,8 @@ Yayına almadan önce kontrol listesi:
 | Admin şifresi unutuldu | `veritabani/database.db` dosyasını silip uygulamayı yeniden başlatırsanız varsayılan hesap (`admin / admin123`) yeniden oluşur. Bu işlem tüm istatistik ve kayıtları da sıfırlar |
 | Değişen CSS görünmüyor | Tarayıcıda `Ctrl + F5` ile sert yenileme yapın |
 
-## 📄 License
+## 📄 Lisans
 This project is released into the public domain under the [Unlicense](https://unlicense.org/); you are free to use, modify, and distribute it as you wish. See the [`LICENSE`](LICENSE) file for details.
 
-## 🕰️ Last Update
-Oct 09, 2026
+## 🕰️ Güncelleme
+21 Ekim 2026
