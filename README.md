@@ -297,3 +297,9 @@ This project is released into the public domain under the [Unlicense](https://un
 
 ## 🕰️ Güncelleme
 21 Ekim 2026
+
+---
+
+<p align="center">❤️ Made with Love ❤️</p>
+
+---
