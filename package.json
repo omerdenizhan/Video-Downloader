@@ -1,5 +1,5 @@
 {
-    "name": "D-Tube-Video-İndirici",
+    "name": "Video-İndirici",
     "version": "1.0.8",
     "main": "sunucu/uygulama.js",
     "scripts": {

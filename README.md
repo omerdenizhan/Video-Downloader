@@ -1,8 +1,9 @@
-<h1 align="center">⭐ D-Tube Video İndirici ⭐</h1>
+<h1 align="center">⭐ Video İndirici ⭐</h1>
 
 YouTube, YouTube Shorts, Instagram, Twitter / X ve TikTok bağlantılarından video ve ses indirmeyi sağlayan, kayıt gerektirmeyen bir web uygulamasıdır. Üyelik olmadan kullanılır; yönetim için ayrı bir admin paneli içerir.
 
 Sunucu tarafı **Node.js + Express**, görünümler **EJS**, veritabanı **sql.js (SQLite)**, indirme motoru **yt-dlp** ve **FFmpeg**'dir.
+
 
 ## 📌 Özellikler
 
@@ -16,7 +17,7 @@ Sunucu tarafı **Node.js + Express**, görünümler **EJS**, veritabanı **sql.j
 - Aydınlık / karanlık tema (tercih tarayıcıda saklanır)
 - Kayıt veya üyelik gerekmez
 
-**Yönetici Tarafı**
+**Yönetici tarafı**
 - Genel istatistikler: toplam indirme, tekil ziyaretçi, en çok kullanılan platform ve format
 - Sistem sağlık durumu: Node.js, JavaScript runtime, yt-dlp, FFmpeg, geçici klasör, veritabanı
 - Aktif indirmelerin canlı listesi
@@ -27,7 +28,8 @@ Sunucu tarafı **Node.js + Express**, görünümler **EJS**, veritabanı **sql.j
 - Kullanıcı adı ve şifre değiştirme
 - Yeniden boyutlandırılabilir kenar çubuğu (genişlik kaydedilir)
 
-## Gereksinimler
+
+## 📌 Gereksinimler
 
 | Gereksinim | Not |
 |---|---|
@@ -67,7 +69,7 @@ npm run araclari-kur
 | `NODE_ENV` | `production` | Çalışma ortamı |
 | `SESSION_SECURE` | `false` | HTTPS üzerinden yayın yapıyorsanız `true` yapın (çerez yalnızca HTTPS'te gönderilir) |
 
-İsteğe Bağlı Değişkenler:
+İsteğe bağlı değişkenler:
 
 | Değişken | Açıklama |
 |---|---|
@@ -281,7 +283,7 @@ Yayına almadan önce kontrol listesi:
 - [ ] HTTPS kullanıyorsanız `SESSION_SECURE=true` yapın
 - [ ] Uygulama bir ters vekil (nginx vb.) arkasında çalışacak şekilde `trust proxy = 1` ile yapılandırılmıştır; doğrudan internete açıyorsanız bu ayarı gözden geçirin
 
-## 📌 Sorun giderme
+## 📌 Sorun Giderme
 
 | Belirti | Olası neden / çözüm |
 |---|---|
@@ -293,10 +295,11 @@ Yayına almadan önce kontrol listesi:
 | Değişen CSS görünmüyor | Tarayıcıda `Ctrl + F5` ile sert yenileme yapın |
 
 ## 📄 Lisans
-This project is released into the public domain under the [Unlicense](https://unlicense.org/); you are free to use, modify, and distribute it as you wish. See the [`LICENSE`](LICENSE) file for details.
 
-## 🕰️ Güncelleme
-21 Ekim 2026
+Bu proje [Unlicense](https://unlicense.org/) ile kamu malı olarak sunulmuştur; dilediğiniz gibi kullanabilir, değiştirebilir ve dağıtabilirsiniz. Ayrıntılar için [`LICENSE`](LICENSE) dosyasına bakın.
+
+## 🕰️ Son Güncelleme
+28 Ekim 2026
 
 ---
 
